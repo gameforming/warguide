@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playing Rules - WarGuide</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: white;
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 20px;
+    }
+    .rule-description {
+      background-color: #222;
+      padding: 15px;
+      border-radius: 5px;
+      min-height: 150px;
+      font-size: 1rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Warhammer 40K - Playing Rules</h1>
+
+  <select id="rulesDropdown" onchange="showRule()">
+    <option value="">-- Select a rule section --</option>
+    <option value="overview">Game Overview</option>
+    <option value="armyBuilding">Army Building</option>
+    <option value="movement">Movement Phase</option>
+    <option value="shooting">Shooting Phase</option>
+    <option value="charge">Charge Phase</option>
+    <option value="fight">Fight Phase</option>
+    <option value="morale">Morale Phase</option>
+  </select>
+
+  <div class="rule-description" id="ruleText">
+    Please select a rule section from the dropdown above.
+  </div>
+
+  <script>
+    const rules = {
+      overview: `Warhammer 40,000 is a turn-based tabletop game where players command armies of miniatures across a battlefield. Each turn consists of several phases, including movement, shooting, and close combat, with the goal of completing mission objectives and defeating your opponent's forces.`,
+
+      armyBuilding: `Players build their armies by selecting units and wargear to match a points limit. Each unit has a specific points cost, and balanced armies are crucial for fair gameplay.`,
+
+      movement: `During the Movement Phase, players move their units across the battlefield. Different units have varying movement speeds and special abilities affecting movement.`,
+
+      shooting: `In the Shooting Phase, units that have ranged weapons can fire at enemy units within range and line of sight. Players roll dice to determine hits and damage.`,
+
+      charge: `The Charge Phase allows units to attempt a charge move to engage enemy units in close combat. Successful charges can disrupt the opponent's plans.`,
+
+      fight: `The Fight Phase resolves close combat between engaged units. Players alternate attacking and defending, rolling dice to determine outcomes.`,
+
+      morale: `The Morale Phase tests the discipline of units that have taken casualties. Failed morale checks can cause units to flee or suffer additional penalties.`
+    };
+
+    function showRule() {
+      const select = document.getElementById('rulesDropdown');
+      const val = select.value;
+      const textDiv = document.getElementById('ruleText');
+
+      if (!val) {
+        textDiv.textContent = "Please select a rule section from the dropdown above.";
+        return;
+      }
+
+      textDiv.textContent = rules[val] || "Description not found.";
+    }
+  </script>
+
+</body>
+</html>
