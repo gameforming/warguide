@@ -21,7 +21,7 @@
       margin-bottom: 20px;
     }
     .top-bar a {
-      color: #ffffff;
+      color: white;
       text-decoration: none;
       font-weight: bold;
     }
@@ -39,12 +39,14 @@
     }
     .rule-description {
       background-color: #222;
-      padding: 15px;
+      padding: 20px;
       border-radius: 5px;
-      min-height: 150px;
+      min-height: 250px;
       font-size: 1rem;
-      line-height: 1.5;
+      line-height: 1.6;
       white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 400px;
     }
   </style>
 </head>
@@ -72,19 +74,19 @@
 
   <script>
     const rules = {
-      overview: `Warhammer 40,000 is a turn-based tabletop game where players command armies of miniatures across a battlefield. Each turn consists of several phases, including movement, shooting, and close combat, with the goal of completing mission objectives and defeating your opponent's forces.`,
+      overview: `Warhammer 40,000 is a tactical tabletop wargame where two or more players command armies of detailed miniatures on a battlefield. Each player’s goal is to complete objectives and defeat opposing forces through strategic movement, ranged attacks, and close combat.\n\nThe game is played in turns, each consisting of multiple phases: Movement, Shooting, Charge, Fight, and Morale. Mastery of each phase is crucial to gaining an advantage over your opponent.`,
 
-      armyBuilding: `Players build their armies by selecting units and wargear to match a points limit. Each unit has a specific points cost, and balanced armies are crucial for fair gameplay.`,
+      armyBuilding: `Army Building is the foundation of Warhammer 40K. Players select units from their chosen faction and assemble an army within an agreed-upon points limit to ensure fair matches.\n\nEach unit has a points cost based on its abilities, weapons, and special rules. Players can customize units with different wargear and upgrades, allowing for unique strategies and playstyles. Proper army composition and synergy between units are key to success.`,
 
-      movement: `During the Movement Phase, players move their units across the battlefield. Different units have varying movement speeds and special abilities affecting movement.`,
+      movement: `During the Movement Phase, players move their units across the battlefield according to each unit’s movement characteristic.\n\nUnits can advance (move further but cannot shoot afterward), fall back (retreat from combat), or perform standard moves. Terrain and special rules can affect movement, so positioning is essential for controlling the battlefield.`,
 
-      shooting: `In the Shooting Phase, units that have ranged weapons can fire at enemy units within range and line of sight. Players roll dice to determine hits and damage.`,
+      shooting: `In the Shooting Phase, units that did not advance or fall back can shoot at enemy units within their weapon’s range and line of sight.\n\nPlayers roll dice to hit, wound, and save against attacks, factoring in modifiers such as cover, weapon strength, and unit toughness. Effective shooting can soften enemy forces before close combat.`,
 
-      charge: `The Charge Phase allows units to attempt a charge move to engage enemy units in close combat. Successful charges can disrupt the opponent's plans.`,
+      charge: `The Charge Phase lets units attempt to engage enemy units in close combat by performing a charge move.\n\nPlayers roll dice to determine if the charge is successful. Successful charges allow units to fight in the subsequent Fight Phase and can disrupt enemy plans by forcing defensive reactions.`,
 
-      fight: `The Fight Phase resolves close combat between engaged units. Players alternate attacking and defending, rolling dice to determine outcomes.`,
+      fight: `During the Fight Phase, engaged units alternate attacking each other in close combat.\n\nPlayers use dice rolls to resolve attacks, wounds, and saving throws. Close combat can be decisive, as many powerful units excel in melee, and controlling combat can shift the battle's momentum.`,
 
-      morale: `The Morale Phase tests the discipline of units that have taken casualties. Failed morale checks can cause units to flee or suffer additional penalties.`
+      morale: `The Morale Phase tests the discipline and resolve of units that suffered casualties during the turn.\n\nUnits must take morale tests to determine if they hold their ground or suffer penalties such as fleeing or reduced effectiveness. Maintaining high morale is critical to keeping your army effective on the battlefield.`
     };
 
     function showRule() {
