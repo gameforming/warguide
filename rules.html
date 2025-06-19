@@ -13,6 +13,18 @@
       margin: 40px auto;
       padding: 20px;
     }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      background-color: #1c1c1c;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+    }
+    .top-bar a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+    }
     h1 {
       text-align: center;
       margin-bottom: 30px;
@@ -37,6 +49,9 @@
   </style>
 </head>
 <body>
+  <div class="top-bar">
+    <a href="index.html">← Back to menu</a>
+  </div>
 
   <h1>Warhammer 40K - Playing Rules</h1>
 
@@ -85,6 +100,5 @@
       textDiv.textContent = rules[val] || "Description not found.";
     }
   </script>
-
 </body>
 </html>
