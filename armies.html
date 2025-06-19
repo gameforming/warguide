@@ -29,6 +29,9 @@
       align-items: center;
       margin-top: 40px;
       gap: 15px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
     }
     input, select, button, textarea {
       padding: 10px;
@@ -37,11 +40,12 @@
       font-size: 1rem;
     }
     input[type="text"], input[type="number"], select {
-      width: 300px;
+      width: 100%;
+      box-sizing: border-box;
     }
     textarea {
       resize: none;
-      width: 300px;
+      width: 100%;
       height: 60px;
       background-color: #222;
       color: white;
@@ -58,10 +62,12 @@
     .btn-row {
       display: flex;
       gap: 10px;
+      width: 100%;
+      justify-content: space-between;
     }
     .unit-list {
-      margin-top: 30px;
-      width: 320px;
+      margin-top: 20px;
+      width: 100%;
     }
     .unit {
       background-color: #1e1e1e;
@@ -71,10 +77,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      word-break: break-word;
     }
     .unit-info {
-      max-width: 240px;
-      word-break: break-word;
+      max-width: 85%;
     }
     .unit-delete {
       background-color: #882222;
@@ -83,9 +89,21 @@
       padding: 5px 10px;
       border-radius: 4px;
       cursor: pointer;
+      flex-shrink: 0;
     }
     .unit-delete:hover {
       background-color: #aa3333;
+    }
+    h3 {
+      margin-top: 30px;
+      width: 100%;
+      text-align: left;
+    }
+    label {
+      width: 100%;
+      text-align: left;
+      margin-top: 10px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -96,9 +114,16 @@
   </div>
 
   <div class="container">
-    <h2>Edit Your Army</h2>
+
+    <h2>Your Armies</h2>
+
+    <label for="armySelect">Select Army:</label>
+    <select id="armySelect">
+      <option value="">-- New Army --</option>
+    </select>
 
     <input type="text" id="armyName" placeholder="Enter army name" />
+
     <input type="text" id="armyType" placeholder="Type of army" />
 
     <label>Total Points:</label>
@@ -109,9 +134,10 @@
       <button id="deleteArmy">Delete Army</button>
     </div>
 
-    <hr style="width: 60%; border-color: #333;">
+    <hr style="width: 100%; border-color: #333;" />
 
     <h3>Create Unit</h3>
+
     <input type="text" id="unitName" placeholder="Unit name" />
     <select id="unitType">
       <option value="">Select unit type</option>
@@ -125,14 +151,68 @@
     <button onclick="addUnit()">Add Unit</button>
 
     <div class="unit-list" id="unitList"></div>
+
   </div>
 
   <script>
     let totalPoints = 0;
     let units = [];
+    let armies = {};  // all armies saved in localStorage
+    let currentArmyKey = ""; // army name selected or new
+
+    const armySelect = document.getElementById("armySelect");
+    const armyNameInput = document.getElementById("armyName");
+    const armyTypeInput = document.getElementById("armyType");
+    const pointsDisplay = document.getElementById("pointsDisplay");
+    const unitListDiv = document.getElementById("unitList");
+
+    // Load all armies from localStorage
+    function loadArmies() {
+      const saved = localStorage.getItem("savedArmies");
+      armies = saved ? JSON.parse(saved) : {};
+      populateArmySelect();
+    }
+
+    // Populate the dropdown with armies
+    function populateArmySelect() {
+      armySelect.innerHTML = `<option value="">-- New Army --</option>`;
+      Object.keys(armies).forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        armySelect.appendChild(opt);
+      });
+    }
+
+    // Load selected army data into form
+    function loadArmy(name) {
+      clearUnits();
+      if (!name || !armies[name]) {
+        currentArmyKey = "";
+        armyNameInput.value = "";
+        armyTypeInput.value = "";
+        totalPoints = 0;
+        units = [];
+        updatePointsDisplay();
+        return;
+      }
+      currentArmyKey = name;
+      const armyData = armies[name];
+      armyNameInput.value = armyData.name;
+      armyTypeInput.value = armyData.type;
+      units = armyData.units || [];
+      totalPoints = armyData.totalPoints || 0;
+      updatePointsDisplay();
+      units.forEach(renderUnit);
+    }
+
+    // Clear unit list display
+    function clearUnits() {
+      unitListDiv.innerHTML = "";
+    }
 
     function updatePointsDisplay() {
-      document.getElementById("pointsDisplay").value = totalPoints;
+      pointsDisplay.value = totalPoints;
     }
 
     function addUnit() {
@@ -151,7 +231,6 @@
       updatePointsDisplay();
       renderUnit(unit);
 
-      // Clear inputs
       document.getElementById("unitName").value = "";
       document.getElementById("unitType").value = "";
       document.getElementById("unitPoints").value = "";
@@ -177,55 +256,63 @@
 
       unitDiv.appendChild(infoDiv);
       unitDiv.appendChild(deleteBtn);
-
-      document.getElementById("unitList").appendChild(unitDiv);
+      unitListDiv.appendChild(unitDiv);
     }
 
     function saveArmy() {
-      const armyName = document.getElementById("armyName").value.trim();
-      const armyType = document.getElementById("armyType").value.trim();
+      const name = armyNameInput.value.trim();
+      const type = armyTypeInput.value.trim();
 
-      if (!armyName || !armyType) {
+      if (!name || !type) {
         alert("Please fill in army name and type.");
         return;
       }
 
+      // If renaming army, remove old key if different
+      if (currentArmyKey && currentArmyKey !== name) {
+        delete armies[currentArmyKey];
+      }
+
       const armyData = {
-        name: armyName,
-        type: armyType,
-        units: units,
-        totalPoints: totalPoints
+        name,
+        type,
+        units,
+        totalPoints
       };
 
-      localStorage.setItem("savedArmy", JSON.stringify(armyData));
-      alert("Army saved successfully!");
+      armies[name] = armyData;
+      localStorage.setItem("savedArmies", JSON.stringify(armies));
+      currentArmyKey = name;
+      populateArmySelect();
+      armySelect.value = name;
+      alert("Army saved!");
     }
 
     function deleteArmy() {
-      if (confirm("Are you sure you want to delete this army?")) {
-        localStorage.removeItem("savedArmy");
-        location.reload();
+      if (!currentArmyKey) {
+        alert("No army selected to delete.");
+        return;
+      }
+      if (confirm(`Are you sure you want to delete army "${currentArmyKey}"?`)) {
+        delete armies[currentArmyKey];
+        localStorage.setItem("savedArmies", JSON.stringify(armies));
+        currentArmyKey = "";
+        armySelect.value = "";
+        loadArmy(""); // reset form
+        populateArmySelect();
       }
     }
 
-    function loadArmy() {
-      const saved = localStorage.getItem("savedArmy");
-      if (!saved) return;
-
-      const armyData = JSON.parse(saved);
-      document.getElementById("armyName").value = armyData.name;
-      document.getElementById("armyType").value = armyData.type;
-      totalPoints = armyData.totalPoints || 0;
-      units = armyData.units || [];
-      updatePointsDisplay();
-
-      units.forEach(renderUnit);
-    }
+    armySelect.addEventListener("change", () => {
+      loadArmy(armySelect.value);
+    });
 
     document.getElementById("saveArmy").addEventListener("click", saveArmy);
     document.getElementById("deleteArmy").addEventListener("click", deleteArmy);
 
-    window.onload = loadArmy;
+    // On page load
+    loadArmies();
+    loadArmy("");
   </script>
 
 </body>
